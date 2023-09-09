@@ -10,7 +10,6 @@ dotenv.config();
 
 const secureCookie = (process.env.NODE_ENV === 'production') ? true:false;
 const fileStorage = FileStore(session);
-console.log(process.env.APP_KEY);
 const sessionOptions: SessionOptions = {
 	secret: process.env.APP_KEY as string,
 	store: new fileStorage(),
