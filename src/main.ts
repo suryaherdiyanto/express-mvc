@@ -21,6 +21,7 @@ const sessionOptions: SessionOptions = {
 
 app.set('views', path.join(__dirname, '../views'));
 app.set('view engine', 'pug');
+app.use('/assets', express.static(path.join(__dirname, '../public/assets')));
 
 app.use(session(sessionOptions));
 app.use('^/api/*', Express.json());
