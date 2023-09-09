@@ -3,6 +3,7 @@ import Express, { Response } from "express";
 import * as dotenv from "dotenv";
 import session, {SessionOptions} from "express-session";
 import FileStore from "session-file-store";
+import path from "path";
 
 
 const app = express();
@@ -18,12 +19,15 @@ const sessionOptions: SessionOptions = {
 	cookie: { secure: secureCookie }
 };
 
+app.set('views', path.join(__dirname, '../views'));
+app.set('view engine', 'pug');
+
 app.use(session(sessionOptions));
 app.use('^/api/*', Express.json());
 app.use(/^\/(?!api).*/, Express.urlencoded({ extended: false }));
 
 app.get('/', (_, res: Response) => {
-	res.send('Woooo');
+	res.render('index');
 })
 
 app.listen(3000, () => {
