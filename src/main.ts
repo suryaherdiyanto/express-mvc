@@ -29,7 +29,11 @@ app.use(/^\/(?!api).*/, Express.urlencoded({ extended: false }));
 
 app.get('/', (_, res: Response) => {
 	res.render('index');
-})
+});
+
+app.use((_, res: Response) => {
+	res.render('404');
+});
 
 app.listen(3000, () => {
 	console.log('Server started at port 3000');
