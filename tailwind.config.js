@@ -2,7 +2,11 @@
 module.exports = {
   content: ["./views/**/*.{pug,html}"],
   theme: {
-    extend: {},
+    extend: {
+		"fontFamily": {
+			"body": ['"Nunito"', 'sans-serif']
+		}
+	},
   },
   plugins: [],
 }
