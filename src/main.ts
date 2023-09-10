@@ -1,9 +1,10 @@
-import express, {NextFunction} from "express";
+import express from "express";
 import Express, { Response } from "express";
 import * as dotenv from "dotenv";
 import session, {SessionOptions} from "express-session";
 import FileStore from "session-file-store";
 import path from "path";
+import {handle404, handle500} from "./middlewares/error-handle.middleware";
 
 
 const app = express();
@@ -31,15 +32,8 @@ app.get('/', (_, res: Response) => {
 	res.render('index');
 });
 
-app.use((_, res: Response) => {
-	res.render('404');
-});
-app.use((err: Error, _: any, res: Response, next: NextFunction) => {
-	if (err.stack) {
-		return res.status(500).render('500', { err });
-	}
-	next();
-});
+app.use(handle404);
+app.use(handle500);
 
 app.listen(3000, () => {
 	console.log('Server started at port 3000');
