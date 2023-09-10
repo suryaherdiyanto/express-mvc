@@ -28,14 +28,17 @@ app.use('^/api/*', Express.json());
 app.use(/^\/(?!api).*/, Express.urlencoded({ extended: false }));
 
 app.get('/', (_, res: Response) => {
-	res.render('index');
+	res.render('idex');
 });
 
+app.use((_, res: Response) => {
+	res.render('404');
+});
 app.use((err: Error, _: any, res: Response, next: NextFunction) => {
 	if (err.stack) {
 		return res.status(500).render('500', { err });
 	}
-	res.render('404');
+	next();
 });
 
 app.listen(3000, () => {
