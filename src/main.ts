@@ -28,7 +28,7 @@ app.use('^/api/*', Express.json());
 app.use(/^\/(?!api).*/, Express.urlencoded({ extended: false }));
 
 app.get('/', (_, res: Response) => {
-	res.render('idex');
+	res.render('index');
 });
 
 app.use((_, res: Response) => {
