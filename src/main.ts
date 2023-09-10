@@ -5,6 +5,7 @@ import session, {SessionOptions} from "express-session";
 import FileStore from "session-file-store";
 import path from "path";
 import {handle404, handle500} from "./middlewares/error-handle.middleware";
+import {assignCsrf, verifyCsrf} from "./middlewares/csrf.middleware";
 
 
 const app = express();
@@ -27,6 +28,9 @@ app.use('/assets', express.static(path.join(__dirname, '../public/assets')));
 app.use(session(sessionOptions));
 app.use('^/api/*', Express.json());
 app.use(/^\/(?!api).*/, Express.urlencoded({ extended: false }));
+app.use(/^\/(?!api).*/, assignCsrf);
+app.use(/^\/(?!api).*/, verifyCsrf);
+
 
 app.get('/', (_, res: Response) => {
 	res.render('index');
