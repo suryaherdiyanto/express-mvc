@@ -1,4 +1,4 @@
-import express from "express";
+import express, {NextFunction} from "express";
 import Express, { Response } from "express";
 import * as dotenv from "dotenv";
 import session, {SessionOptions} from "express-session";
@@ -31,7 +31,10 @@ app.get('/', (_, res: Response) => {
 	res.render('index');
 });
 
-app.use((_, res: Response) => {
+app.use((err: Error, _: any, res: Response, next: NextFunction) => {
+	if (err.stack) {
+		return res.status(500).render('500', { err });
+	}
 	res.render('404');
 });
 
