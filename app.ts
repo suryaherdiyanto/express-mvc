@@ -75,15 +75,7 @@ export class App {
             }
         }
 
-        return this;
-
-    }
-
-    run() {
-        this.app.listen(this.port, () => {
-            console.log(`Application started at port ${this.port}`);
-        });
-
         return this.app;
+
     }
 }
