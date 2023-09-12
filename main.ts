@@ -1,35 +1,18 @@
-import express from "express";
-import Express, { Response } from "express";
 import * as dotenv from "dotenv";
-import session, {SessionOptions} from "express-session";
-import FileStore from "session-file-store";
-import path from "path";
-import {handle404, handle500} from "./middlewares/error-handle.middleware";
-import {assignCsrf, verifyCsrf} from "./middlewares/csrf.middleware";
-
-
-const app = express();
 dotenv.config();
 
-const secureCookie = (process.env.NODE_ENV === 'production') ? true:false;
+import { Response } from "express";
+import session from "express-session";
+import FileStore from "session-file-store";
+import {handle404, handle500} from "./middlewares/error-handle.middleware";
+import { App } from "./app";
+
+
 const fileStorage = FileStore(session);
-const sessionOptions: SessionOptions = {
-	secret: process.env.APP_KEY as string,
-	store: new fileStorage(),
-	resave: false,
-	saveUninitialized: false,
-	cookie: { secure: secureCookie }
-};
-
-app.set('views', path.join(__dirname, './views'));
-app.set('view engine', 'pug');
-app.use('/assets', express.static(path.join(__dirname, './public/assets')));
-
-app.use(session(sessionOptions));
-app.use('^/api/*', Express.json());
-app.use(/^\/(?!api).*/, Express.urlencoded({ extended: false }));
-app.use(/^\/(?!api).*/, assignCsrf);
-app.use(/^\/(?!api).*/, verifyCsrf);
+const app = new App(3000, {
+	sessionStorage: new fileStorage(),
+	statefull: true
+}).setUp().run();
 
 
 app.get('/', (_, res: Response) => {
@@ -38,7 +21,3 @@ app.get('/', (_, res: Response) => {
 
 app.use(handle404);
 app.use(handle500);
-
-app.listen(3000, () => {
-	console.log('Server started at port 3000');
-});
