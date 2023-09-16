@@ -1,5 +1,7 @@
+import { log } from "console";
 import { Request, Response } from "express";
+import { AppService } from "./server";
 
-export function home(_: Request, res: Response) {
+export function home(req: Request, res: Response) {
     res.render('index');
 }

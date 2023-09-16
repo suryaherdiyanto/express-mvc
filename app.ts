@@ -1,4 +1,4 @@
-import express, { IRouterHandler } from "express";
+import express, { IRouterHandler, NextFunction, Request, Response } from "express";
 import Express from "express";
 import session, {SessionOptions} from "express-session";
 import { assignCsrf, verifyCsrf } from "./middlewares/csrf.middleware";
@@ -13,8 +13,18 @@ interface AppOptions {
     sessionStorage?: session.Store
 }
 
+declare global {
+    namespace Express {
+        export interface Request {
+            useService<T>(t: T): T
+        }
+    }
+}
+
 export class App {
     private app: express.Application;
+    public services: any = {};
+
     private config: AppOptions = {
         statefull: false,
         useView: true,
@@ -59,11 +69,29 @@ export class App {
         this.app.use(/^\/(?!api).*/, verifyCsrf);
     }
 
+    registerService<T>(name: string, service: T) {
+        this.services[name] = service;
+        return this;
+    }
+
     getApp() {
         return this.app;
     }
 
     setUp() {
+        this.app.use((req: Request, _: Response, next: NextFunction) => {
+
+            req.useService = (serviceName) => {
+                if (!this.services[serviceName]) {
+                    throw new Error(`Service ${serviceName} not found`);
+                }
+
+                return this.services[serviceName];
+            };
+
+            next();
+
+        });
 
         if (!this.config.statefull) {
             this.setSessionCookie();
