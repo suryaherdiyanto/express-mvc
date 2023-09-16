@@ -7,19 +7,10 @@ import { home } from "./app.controller";
 
 const fileStorage = FileStore(session);
 
-export class AppService {
-    constructor(private name: string) {
-    }
-
-    getName() {
-        return this.name;
-    }
-}
-
 export const app = new App(3000, {
 	sessionStorage: new fileStorage(),
 	statefull: true
-}).registerService(AppService.name, new AppService('hello')).getApp();
+}).getApp();
 
 
 app.get('/', home);
