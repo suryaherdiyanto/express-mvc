@@ -1,13 +1,15 @@
 import {createHash} from "crypto";
 import {NextFunction, Request, Response} from "express";
 import * as dotenv from 'dotenv';
+import { ValidationErrorAttribute } from "../errors/validation.error";
 
 dotenv.config();
 const csrfToken = createHash('sha256').update(process.env.APP_KEY as string + Date.now()).digest('hex');
 
 declare module 'express-session' {
 	export interface SessionData {
-		'_csrf': string
+		'_csrf': string,
+		'errors': ValidationErrorAttribute[]
 	}
 }
 
