@@ -9,6 +9,7 @@ export function handle404 (_: Request, res: Response) {
 export function handleValidation(err: ValidationError, req: Request, res: Response, next: NextFunction) {
 	res.status(err.status);
 	req.session.errors?.push(err.errors);
+	next();
 }
 
 export function handle500(err: Error, _: Request, res: Response, next: NextFunction) {
