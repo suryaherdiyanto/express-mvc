@@ -3,18 +3,17 @@ import {handle404, handle500} from "./middlewares/error-handle.middleware";
 import session from "express-session";
 import FileStore from "session-file-store";
 import { App } from "./app";
+import { home } from "./app.controller";
 
 const fileStorage = FileStore(session);
 
 export const app = new App(3000, {
 	sessionStorage: new fileStorage(),
 	statefull: true
-}).setUp();
+}).getApp();
 
 
-app.get('/', (_, res: Response) => {
-	res.render('index');
-});
+app.get('/', home);
 
 app.use(handle404);
 app.use(handle500);

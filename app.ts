@@ -1,4 +1,4 @@
-import express from "express";
+import express, { IRouterHandler } from "express";
 import Express from "express";
 import session, {SessionOptions} from "express-session";
 import { assignCsrf, verifyCsrf } from "./middlewares/csrf.middleware";
@@ -28,6 +28,7 @@ export class App {
         this.app = express();
         Object.assign(this.config, config);
 
+        this.setUp();
     }
 
     setSessionCookie() {
@@ -58,6 +59,10 @@ export class App {
         this.app.use(/^\/(?!api).*/, verifyCsrf);
     }
 
+    getApp() {
+        return this.app;
+    }
+
     setUp() {
 
         if (!this.config.statefull) {
@@ -74,8 +79,6 @@ export class App {
                 this.setStatic(this.config.staticUri, this.config.staticPath);
             }
         }
-
-        return this.app;
 
     }
 }
