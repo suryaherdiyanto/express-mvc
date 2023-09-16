@@ -16,7 +16,7 @@ interface AppOptions {
 declare global {
     namespace Express {
         export interface Request {
-            useService<T>(t: T): T
+            useService<T>(t: string): T
         }
     }
 }

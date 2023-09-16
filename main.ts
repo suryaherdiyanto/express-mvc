@@ -6,13 +6,14 @@ import session from "express-session";
 import FileStore from "session-file-store";
 import { App } from "./app";
 import { home } from "./app.controller";
+import { AppService } from "./services/app.service";
 
 const fileStorage = FileStore(session);
 
 export const app = new App({
 	sessionStorage: new fileStorage(),
 	statefull: true
-}).getApp();
+}).registerService(AppService.name, new AppService()).getApp();
 
 
 app.get('/', home);

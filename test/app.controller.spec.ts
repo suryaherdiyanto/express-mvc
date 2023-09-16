@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { home } from "../app.controller";
+import { AppService } from "../services/app.service";
 
 
 let request: Partial<Request>;
@@ -8,6 +9,10 @@ beforeEach(() => {
     response = {
         render: jest.fn()
     };
+
+    request = {
+        useService: jest.fn().mockImplementation(() => new AppService())
+    }
 });
 
 describe("Home Controller", () => {
@@ -16,6 +21,6 @@ describe("Home Controller", () => {
         const res = jest.spyOn(response, 'render');
 
         home(request as Request, response as Response);
-        expect(res).toHaveBeenCalledWith('index');
+        expect(res).toHaveBeenCalledWith('index', { name: 'Surya' });
     });
 })
