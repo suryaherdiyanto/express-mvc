@@ -34,7 +34,7 @@ export class App {
         staticPath: './public/assets'
     };
 
-    constructor(private port: number, config: Partial<AppOptions>) {
+    constructor(config: Partial<AppOptions>) {
         this.app = express();
         Object.assign(this.config, config);
 
