@@ -7,6 +7,7 @@ import {handle404, handle500} from "./middlewares/error-handle.middleware";
 import session from "express-session";
 import FileStore from "session-file-store";
 import { App } from "./app";
+import { appRoute } from "./modules/app/app.route";
 
 const fileStorage = FileStore(session);
 
@@ -14,6 +15,8 @@ export const app = new App({
 	sessionStorage: new fileStorage(),
 	statefull: true
 }).getApp();
+
+app.use(appRoute);
 
 app.use(handle404);
 app.use(handle500);

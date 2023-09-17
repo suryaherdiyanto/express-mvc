@@ -4,5 +4,5 @@ import { AppService } from "./modules/app/app.service";
 import { AppController } from "./modules/app/app.controller";
 
 
-container.resolve(AppService);
-container.resolve(AppController);
+container.register(AppService.name, AppService);
+container.register(AppController.name, AppController);
