@@ -1,7 +1,7 @@
-import "../providers";
+import "../../providers";
 import { Request, Response } from "express";
 import { container } from "tsyringe";
-import { AppController } from "../modules/app/app.controller";
+import { AppController } from "../../modules/app/app.controller";
 
 
 let request: Partial<Request>;
