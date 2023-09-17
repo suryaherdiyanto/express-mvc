@@ -5,4 +5,3 @@
   var body = document.querySelector("body");
   console.log(body);
 })();
-//# sourceMappingURL=client.js.map
