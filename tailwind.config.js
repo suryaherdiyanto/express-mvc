@@ -4,7 +4,7 @@ module.exports = {
   theme: {
     extend: {
 		"fontFamily": {
-			"body": ['"Nunito"', 'sans-serif']
+			"body": ['"Open Sans"', 'sans-serif']
 		}
 	},
   },
