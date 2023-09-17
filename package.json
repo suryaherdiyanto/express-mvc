@@ -30,6 +30,7 @@
     "joi": "^17.10.1",
     "mysql2": "^3.6.0",
     "pug": "^3.0.2",
+    "reflect-metadata": "^0.1.13",
     "session-file-store": "^1.5.0",
     "sqlite3": "^5.1.6",
     "tsyringe": "^4.8.0"

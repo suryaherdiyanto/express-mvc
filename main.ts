@@ -5,8 +5,8 @@ import {handle404, handle500} from "./middlewares/error-handle.middleware";
 import session from "express-session";
 import FileStore from "session-file-store";
 import { App } from "./app";
-import { home } from "./app.controller";
-import { AppService } from "./services/app.service";
+import { home } from "./modules/app/app.controller";
+import { AppService } from "./modules/app/app.service";
 
 const fileStorage = FileStore(session);
 

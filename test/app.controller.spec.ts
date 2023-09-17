@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { home } from "../app.controller";
-import { AppService } from "../services/app.service";
+import { home } from "../modules/app/app.controller";
+import { AppService } from "../modules/app/app.service";
 
 
 let request: Partial<Request>;
