@@ -2,9 +2,9 @@
 module.exports = {
     preset: 'ts-jest',
     testEnvironment: 'node',
-    rootDir: './test/integration',
+    rootDir: '.',
     moduleFileExtensions: ['js', 'ts'],
-    testRegex: ".spec.ts$",
+    testRegex: ".int.spec.ts$",
     transform: {
       "^.+\\.(t|j)s$": "ts-jest"
     }
