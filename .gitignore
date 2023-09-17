@@ -2,3 +2,4 @@ node_modules
 sessions
 .env
 dist
+public/assets/js/client.*.js
