@@ -1,7 +1,14 @@
+import { injectable, inject } from "tsyringe";
 import { Request, Response } from "express";
 import { AppService } from "./app.service";
 
-export function home(req: Request, res: Response) {
-    const name = req.useService<AppService>(AppService.name).getName();
-    res.render('index', { name });
+@injectable()
+export class AppController {
+    constructor(@inject('AppService') private service: AppService) {}
+
+    home(_: Request, res: Response) {
+        const name = this.service.getName();
+
+        res.render('index', { name });
+    }
 }
