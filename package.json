@@ -4,7 +4,8 @@
   "description": "A boilerplate express for MVC web application",
   "main": "index.js",
   "scripts": {
-    "dev": "concurrently \"nodemon\" \"npx tailwindcss -i ./assets/css/main.css -o ./public/assets/css/main.css --watch\"",
+    "dev": "concurrently \"nodemon\" \"npx tailwindcss -i ./assets/css/main.css -o ./public/assets/css/main.css --watch\" \"esbuild ./assets/js/client.js --bundle --sourcemap --watch --outdir=./public/assets/js\"",
+    "build": "concurrently \"npx tailwindcss -i ./assets/css/main.css -o ./public/assets/css/main.css --minify\" \"esbuild ./assets/js/client.js --bundle --sourcemap --minify --outdir=./public/assets/js\"",
     "tailwind": "npx tailwindcss -i ./assets/css/main.css -o ./public/assets/css/main.css",
     "test": "jest --config=./test/unit/jest.config.js",
     "test:watch": "jest --config=./test/unit/jest.config.js --no-cache --watch",

@@ -2,6 +2,6 @@
   "version": 3,
   "sources": ["../../../assets/js/client.ts"],
   "sourcesContent": ["\nconsole.log('From Client JS');\n\nconst body = document.querySelector('body') as HTMLElement;\n\nconsole.log(body);\n"],
-  "mappings": "mBACA,QAAQ,IAAI,gBAAgB,EAE5B,IAAMA,EAAO,SAAS,cAAc,MAAM,EAE1C,QAAQ,IAAIA,CAAI",
-  "names": ["body"]
+  "mappings": ";;;AACA,UAAQ,IAAI,gBAAgB;AAE5B,MAAM,OAAO,SAAS,cAAc,MAAM;AAE1C,UAAQ,IAAI,IAAI;",
+  "names": []
 }
