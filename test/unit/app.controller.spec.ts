@@ -10,7 +10,8 @@ let controller: AppController;
 
 beforeEach(() => {
     response = {
-        render: jest.fn()
+        render: jest.fn(),
+        renderVue: jest.fn()
     };
 
     request = {};
@@ -24,9 +25,9 @@ describe("Home Controller", () => {
 
     it("Should return home view", () => {
 
-        const res = jest.spyOn(response, 'render');
+        const res = jest.spyOn(response, 'renderVue');
 
         controller.home(request as Request, response as Response);
-        expect(res).toHaveBeenCalledWith('index', { name: 'Surya' });
+        expect(res).toHaveBeenCalledWith('Index');
     });
 })
