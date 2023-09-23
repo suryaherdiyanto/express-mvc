@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "concurrently \"nodemon\" \"npx tailwindcss -i ./assets/css/main.css -o ./public/assets/css/main.css --watch\" \"node build.mjs\"",
-    "build": "concurrently \"npx tailwindcss -i ./assets/css/main.css -o ./public/assets/css/main.css --minify\" \"node ./build.mjs\"",
+    "build": "NODE_ENV=production concurrently \"npx tailwindcss -i ./assets/css/main.css -o ./public/assets/css/main.css --minify\" \"node ./build.mjs\"",
     "tailwind": "npx tailwindcss -i ./assets/css/main.css -o ./public/assets/css/main.css",
     "test": "jest --config=./test/unit/jest.config.js",
     "test:watch": "jest --config=./test/unit/jest.config.js --no-cache --watch",
