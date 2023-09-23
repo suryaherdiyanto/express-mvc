@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["../../../assets/js/client.js"],
-  "sourcesContent": ["\nconsole.log('From Client JS');\n\nconst body = document.querySelector('body');\n\nconsole.log(body);\n"],
-  "mappings": ";;;AACA,UAAQ,IAAI,gBAAgB;AAE5B,MAAM,OAAO,SAAS,cAAc,MAAM;AAE1C,UAAQ,IAAI,IAAI;",
-  "names": []
-}
