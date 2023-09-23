@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { createSSRApp } from "vue";
-import { renderToNodeStream, renderToString } from "vue/server-renderer";
+import { renderToNodeStream } from "vue/server-renderer";
 
 const pages = require('../public/assets/js/server').default;
 
