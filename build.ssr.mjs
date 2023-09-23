@@ -11,5 +11,5 @@ const build = await esbuild.context({
 });
 
 
-build.watch();
+await build.watch();
 console.log("Build watch ssr");

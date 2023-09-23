@@ -8089,9 +8089,11 @@ Component that was made reactive: `,
 
   // pages/Index.vue
   Index_default.render = render;
-  var Index_default2 = Index_default;
 
   // assets/js/vue/Index.js
-  createSSRApp(Index_default2).mount("#app");
+  createSSRApp({
+    setup() {
+    }
+  }).mount("#app");
 })();
 //# sourceMappingURL=Index.js.map

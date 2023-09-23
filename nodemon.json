@@ -1,6 +1,6 @@
 {
 	"watch": ["./"],
-	"ext": "ts,json",
+	"ext": "ts,json,vue",
 	"ignore": ["*.spec.ts", "sessions/*"],
 	"exec": "ts-node ./main.ts"
 }

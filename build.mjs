@@ -33,7 +33,7 @@ if (process.env.NODE_ENV !== 'production') {
   const build = await esbuild.context(buildOption);
 
   if (process.env.NODE_ENV !== 'production') {
-    build.watch();
+    await build.watch();
     console.log('Build watch!');
   }
 } else {
