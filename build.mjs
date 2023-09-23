@@ -1,19 +1,32 @@
 import * as esbuild from "esbuild";
 import fs from 'fs';
-const version = Date.now();
+import vuePlugin from 'esbuild-plugin-vue-next';
 
-let assetPath = 'assets/js/client.js';
-
-if (process.env.NODE_ENV === 'production') {
-  assetPath = `assets/js/client.${version}.js`;
+function getFiles(dir, files = []) {
+  const fileList = fs.readdirSync(dir);
+  // Create the full path of the file/ by concatenating the passed directory and file/directory name
+  for (const file of fileList) {
+    const name = `${dir}/${file}`;
+    // Check if the current file/directory is a directory using fs.statSync
+    if (fs.statSync(name).isDirectory()) {
+      // If it is a directory, recursively call the getFiles function with the directory path and the files array
+      getFiles(name, files);
+    } else {
+      // If it is a file, push the full path to the files array
+      files.push(name);
+    }
+  }
+  return files;
 }
 
 const buildOption = {
-    entryPoints: ["./assets/js/client.js"],
-    outfile: `./public/${assetPath}`,
+    entryPoints: getFiles('./assets/js/vue'),
+    outdir: './public/assets/js/vue',
     bundle: true,
     minify: process.env.NODE_ENV === 'production' ? true:false,
     sourcemap: process.env.NODE_ENV !== 'production' ? true:false,
+    metafile: true,
+    plugins: [vuePlugin()]
 };
 
 if (process.env.NODE_ENV !== 'production') {
@@ -27,7 +40,3 @@ if (process.env.NODE_ENV !== 'production') {
   esbuild.buildSync(buildOption);
 }
 
-
-fs.writeFileSync('./public/build-manifest.json', JSON.stringify({
-  "/assets/js/client.js": '/'+assetPath
-}));
