@@ -79,19 +79,6 @@ export class App {
     }
 
     setUp() {
-        this.app.use((req: Request, _: Response, next: NextFunction) => {
-
-            req.useService = (serviceName) => {
-                if (!this.services[serviceName]) {
-                    throw new Error(`Service ${serviceName} not found`);
-                }
-
-                return this.services[serviceName];
-            };
-
-            next();
-
-        });
 
         if (!this.config.statefull) {
             this.setSessionCookie();
