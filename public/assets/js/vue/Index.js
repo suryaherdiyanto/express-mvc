@@ -1902,12 +1902,6 @@
     currentScopeId = instance && instance.type.__scopeId || null;
     return prev;
   }
-  function pushScopeId(id) {
-    currentScopeId = id;
-  }
-  function popScopeId() {
-    currentScopeId = null;
-  }
   function withCtx(fn, ctx = currentRenderingInstance, isNonScopedSlot) {
     if (!ctx)
       return fn;
@@ -1953,7 +1947,7 @@
       slots,
       attrs,
       emit: emit2,
-      render: render2,
+      render,
       renderCache,
       data,
       setupState,
@@ -1970,7 +1964,7 @@
       if (vnode.shapeFlag & 4) {
         const proxyToUse = withProxy || proxy;
         result = normalizeVNode(
-          render2.call(
+          render.call(
             proxyToUse,
             proxyToUse,
             renderCache,
@@ -1982,12 +1976,12 @@
         );
         fallthroughAttrs = attrs;
       } else {
-        const render22 = Component;
+        const render2 = Component;
         if (attrs === props) {
           markAttrsAccessed();
         }
         result = normalizeVNode(
-          render22.length > 1 ? render22(
+          render2.length > 1 ? render2(
             props,
             true ? {
               get attrs() {
@@ -1997,7 +1991,7 @@
               slots,
               emit: emit2
             } : { attrs, slots, emit: emit2 }
-          ) : render22(
+          ) : render2(
             props,
             null
             /* we know it doesn't need it */
@@ -3153,7 +3147,7 @@
       beforeUnmount,
       destroyed,
       unmounted,
-      render: render2,
+      render,
       renderTracked,
       renderTriggered,
       errorCaptured,
@@ -3307,8 +3301,8 @@
         instance.exposed = {};
       }
     }
-    if (render2 && instance.render === NOOP) {
-      instance.render = render2;
+    if (render && instance.render === NOOP) {
+      instance.render = render;
     }
     if (inheritAttrs != null) {
       instance.inheritAttrs = inheritAttrs;
@@ -3550,8 +3544,8 @@
     };
   }
   var uid$1 = 0;
-  function createAppAPI(render2, hydrate) {
-    return function createApp(rootComponent, rootProps = null) {
+  function createAppAPI(render, hydrate) {
+    return function createApp2(rootComponent, rootProps = null) {
       if (!isFunction(rootComponent)) {
         rootComponent = extend({}, rootComponent);
       }
@@ -3663,13 +3657,13 @@
             vnode.appContext = context;
             if (true) {
               context.reload = () => {
-                render2(cloneVNode(vnode), rootContainer, isSVG);
+                render(cloneVNode(vnode), rootContainer, isSVG);
               };
             }
             if (isHydrate && hydrate) {
               hydrate(vnode, rootContainer);
             } else {
-              render2(vnode, rootContainer, isSVG);
+              render(vnode, rootContainer, isSVG);
             }
             isMounted = true;
             app._container = rootContainer;
@@ -3688,7 +3682,7 @@ If you want to remount the same app, move your app creation logic into a factory
         },
         unmount() {
           if (isMounted) {
-            render2(null, app._container);
+            render(null, app._container);
             if (true) {
               app._instance = null;
               devtoolsUnmountApp(app);
@@ -4343,407 +4337,6 @@ If you want to remount the same app, move your app creation logic into a factory
       }
     }
   }
-  var hasMismatch = false;
-  var isSVGContainer = (container) => /svg/.test(container.namespaceURI) && container.tagName !== "foreignObject";
-  var isComment = (node) => node.nodeType === 8;
-  function createHydrationFunctions(rendererInternals) {
-    const {
-      mt: mountComponent,
-      p: patch,
-      o: {
-        patchProp: patchProp2,
-        createText,
-        nextSibling,
-        parentNode,
-        remove: remove2,
-        insert,
-        createComment
-      }
-    } = rendererInternals;
-    const hydrate = (vnode, container) => {
-      if (!container.hasChildNodes()) {
-        warn2(
-          `Attempting to hydrate existing markup but container is empty. Performing full mount instead.`
-        );
-        patch(null, vnode, container);
-        flushPostFlushCbs();
-        container._vnode = vnode;
-        return;
-      }
-      hasMismatch = false;
-      hydrateNode(container.firstChild, vnode, null, null, null);
-      flushPostFlushCbs();
-      container._vnode = vnode;
-      if (hasMismatch && true) {
-        console.error(`Hydration completed but contains mismatches.`);
-      }
-    };
-    const hydrateNode = (node, vnode, parentComponent, parentSuspense, slotScopeIds, optimized = false) => {
-      const isFragmentStart = isComment(node) && node.data === "[";
-      const onMismatch = () => handleMismatch(
-        node,
-        vnode,
-        parentComponent,
-        parentSuspense,
-        slotScopeIds,
-        isFragmentStart
-      );
-      const { type, ref: ref2, shapeFlag, patchFlag } = vnode;
-      let domType = node.nodeType;
-      vnode.el = node;
-      if (patchFlag === -2) {
-        optimized = false;
-        vnode.dynamicChildren = null;
-      }
-      let nextNode = null;
-      switch (type) {
-        case Text:
-          if (domType !== 3) {
-            if (vnode.children === "") {
-              insert(vnode.el = createText(""), parentNode(node), node);
-              nextNode = node;
-            } else {
-              nextNode = onMismatch();
-            }
-          } else {
-            if (node.data !== vnode.children) {
-              hasMismatch = true;
-              warn2(
-                `Hydration text mismatch:
-- Client: ${JSON.stringify(node.data)}
-- Server: ${JSON.stringify(vnode.children)}`
-              );
-              node.data = vnode.children;
-            }
-            nextNode = nextSibling(node);
-          }
-          break;
-        case Comment:
-          if (domType !== 8 || isFragmentStart) {
-            nextNode = onMismatch();
-          } else {
-            nextNode = nextSibling(node);
-          }
-          break;
-        case Static:
-          if (isFragmentStart) {
-            node = nextSibling(node);
-            domType = node.nodeType;
-          }
-          if (domType === 1 || domType === 3) {
-            nextNode = node;
-            const needToAdoptContent = !vnode.children.length;
-            for (let i = 0; i < vnode.staticCount; i++) {
-              if (needToAdoptContent)
-                vnode.children += nextNode.nodeType === 1 ? nextNode.outerHTML : nextNode.data;
-              if (i === vnode.staticCount - 1) {
-                vnode.anchor = nextNode;
-              }
-              nextNode = nextSibling(nextNode);
-            }
-            return isFragmentStart ? nextSibling(nextNode) : nextNode;
-          } else {
-            onMismatch();
-          }
-          break;
-        case Fragment:
-          if (!isFragmentStart) {
-            nextNode = onMismatch();
-          } else {
-            nextNode = hydrateFragment(
-              node,
-              vnode,
-              parentComponent,
-              parentSuspense,
-              slotScopeIds,
-              optimized
-            );
-          }
-          break;
-        default:
-          if (shapeFlag & 1) {
-            if (domType !== 1 || vnode.type.toLowerCase() !== node.tagName.toLowerCase()) {
-              nextNode = onMismatch();
-            } else {
-              nextNode = hydrateElement(
-                node,
-                vnode,
-                parentComponent,
-                parentSuspense,
-                slotScopeIds,
-                optimized
-              );
-            }
-          } else if (shapeFlag & 6) {
-            vnode.slotScopeIds = slotScopeIds;
-            const container = parentNode(node);
-            mountComponent(
-              vnode,
-              container,
-              null,
-              parentComponent,
-              parentSuspense,
-              isSVGContainer(container),
-              optimized
-            );
-            nextNode = isFragmentStart ? locateClosingAsyncAnchor(node) : nextSibling(node);
-            if (nextNode && isComment(nextNode) && nextNode.data === "teleport end") {
-              nextNode = nextSibling(nextNode);
-            }
-            if (isAsyncWrapper(vnode)) {
-              let subTree;
-              if (isFragmentStart) {
-                subTree = createVNode(Fragment);
-                subTree.anchor = nextNode ? nextNode.previousSibling : container.lastChild;
-              } else {
-                subTree = node.nodeType === 3 ? createTextVNode("") : createVNode("div");
-              }
-              subTree.el = node;
-              vnode.component.subTree = subTree;
-            }
-          } else if (shapeFlag & 64) {
-            if (domType !== 8) {
-              nextNode = onMismatch();
-            } else {
-              nextNode = vnode.type.hydrate(
-                node,
-                vnode,
-                parentComponent,
-                parentSuspense,
-                slotScopeIds,
-                optimized,
-                rendererInternals,
-                hydrateChildren
-              );
-            }
-          } else if (shapeFlag & 128) {
-            nextNode = vnode.type.hydrate(
-              node,
-              vnode,
-              parentComponent,
-              parentSuspense,
-              isSVGContainer(parentNode(node)),
-              slotScopeIds,
-              optimized,
-              rendererInternals,
-              hydrateNode
-            );
-          } else if (true) {
-            warn2("Invalid HostVNode type:", type, `(${typeof type})`);
-          }
-      }
-      if (ref2 != null) {
-        setRef(ref2, null, parentSuspense, vnode);
-      }
-      return nextNode;
-    };
-    const hydrateElement = (el, vnode, parentComponent, parentSuspense, slotScopeIds, optimized) => {
-      optimized = optimized || !!vnode.dynamicChildren;
-      const { type, props, patchFlag, shapeFlag, dirs } = vnode;
-      const forcePatchValue = type === "input" && dirs || type === "option";
-      if (true) {
-        if (dirs) {
-          invokeDirectiveHook(vnode, null, parentComponent, "created");
-        }
-        if (props) {
-          if (forcePatchValue || !optimized || patchFlag & (16 | 32)) {
-            for (const key in props) {
-              if (forcePatchValue && key.endsWith("value") || isOn(key) && !isReservedProp(key)) {
-                patchProp2(
-                  el,
-                  key,
-                  null,
-                  props[key],
-                  false,
-                  void 0,
-                  parentComponent
-                );
-              }
-            }
-          } else if (props.onClick) {
-            patchProp2(
-              el,
-              "onClick",
-              null,
-              props.onClick,
-              false,
-              void 0,
-              parentComponent
-            );
-          }
-        }
-        let vnodeHooks;
-        if (vnodeHooks = props && props.onVnodeBeforeMount) {
-          invokeVNodeHook(vnodeHooks, parentComponent, vnode);
-        }
-        if (dirs) {
-          invokeDirectiveHook(vnode, null, parentComponent, "beforeMount");
-        }
-        if ((vnodeHooks = props && props.onVnodeMounted) || dirs) {
-          queueEffectWithSuspense(() => {
-            vnodeHooks && invokeVNodeHook(vnodeHooks, parentComponent, vnode);
-            dirs && invokeDirectiveHook(vnode, null, parentComponent, "mounted");
-          }, parentSuspense);
-        }
-        if (shapeFlag & 16 && // skip if element has innerHTML / textContent
-        !(props && (props.innerHTML || props.textContent))) {
-          let next = hydrateChildren(
-            el.firstChild,
-            vnode,
-            el,
-            parentComponent,
-            parentSuspense,
-            slotScopeIds,
-            optimized
-          );
-          let hasWarned = false;
-          while (next) {
-            hasMismatch = true;
-            if (!hasWarned) {
-              warn2(
-                `Hydration children mismatch in <${vnode.type}>: server rendered element contains more child nodes than client vdom.`
-              );
-              hasWarned = true;
-            }
-            const cur = next;
-            next = next.nextSibling;
-            remove2(cur);
-          }
-        } else if (shapeFlag & 8) {
-          if (el.textContent !== vnode.children) {
-            hasMismatch = true;
-            warn2(
-              `Hydration text content mismatch in <${vnode.type}>:
-- Client: ${el.textContent}
-- Server: ${vnode.children}`
-            );
-            el.textContent = vnode.children;
-          }
-        }
-      }
-      return el.nextSibling;
-    };
-    const hydrateChildren = (node, parentVNode, container, parentComponent, parentSuspense, slotScopeIds, optimized) => {
-      optimized = optimized || !!parentVNode.dynamicChildren;
-      const children = parentVNode.children;
-      const l = children.length;
-      let hasWarned = false;
-      for (let i = 0; i < l; i++) {
-        const vnode = optimized ? children[i] : children[i] = normalizeVNode(children[i]);
-        if (node) {
-          node = hydrateNode(
-            node,
-            vnode,
-            parentComponent,
-            parentSuspense,
-            slotScopeIds,
-            optimized
-          );
-        } else if (vnode.type === Text && !vnode.children) {
-          continue;
-        } else {
-          hasMismatch = true;
-          if (!hasWarned) {
-            warn2(
-              `Hydration children mismatch in <${container.tagName.toLowerCase()}>: server rendered element contains fewer child nodes than client vdom.`
-            );
-            hasWarned = true;
-          }
-          patch(
-            null,
-            vnode,
-            container,
-            null,
-            parentComponent,
-            parentSuspense,
-            isSVGContainer(container),
-            slotScopeIds
-          );
-        }
-      }
-      return node;
-    };
-    const hydrateFragment = (node, vnode, parentComponent, parentSuspense, slotScopeIds, optimized) => {
-      const { slotScopeIds: fragmentSlotScopeIds } = vnode;
-      if (fragmentSlotScopeIds) {
-        slotScopeIds = slotScopeIds ? slotScopeIds.concat(fragmentSlotScopeIds) : fragmentSlotScopeIds;
-      }
-      const container = parentNode(node);
-      const next = hydrateChildren(
-        nextSibling(node),
-        vnode,
-        container,
-        parentComponent,
-        parentSuspense,
-        slotScopeIds,
-        optimized
-      );
-      if (next && isComment(next) && next.data === "]") {
-        return nextSibling(vnode.anchor = next);
-      } else {
-        hasMismatch = true;
-        insert(vnode.anchor = createComment(`]`), container, next);
-        return next;
-      }
-    };
-    const handleMismatch = (node, vnode, parentComponent, parentSuspense, slotScopeIds, isFragment) => {
-      hasMismatch = true;
-      warn2(
-        `Hydration node mismatch:
-- Client vnode:`,
-        vnode.type,
-        `
-- Server rendered DOM:`,
-        node,
-        node.nodeType === 3 ? `(text)` : isComment(node) && node.data === "[" ? `(start of fragment)` : ``
-      );
-      vnode.el = null;
-      if (isFragment) {
-        const end = locateClosingAsyncAnchor(node);
-        while (true) {
-          const next2 = nextSibling(node);
-          if (next2 && next2 !== end) {
-            remove2(next2);
-          } else {
-            break;
-          }
-        }
-      }
-      const next = nextSibling(node);
-      const container = parentNode(node);
-      remove2(node);
-      patch(
-        null,
-        vnode,
-        container,
-        next,
-        parentComponent,
-        parentSuspense,
-        isSVGContainer(container),
-        slotScopeIds
-      );
-      return next;
-    };
-    const locateClosingAsyncAnchor = (node) => {
-      let match = 0;
-      while (node) {
-        node = nextSibling(node);
-        if (node && isComment(node)) {
-          if (node.data === "[")
-            match++;
-          if (node.data === "]") {
-            if (match === 0) {
-              return nextSibling(node);
-            } else {
-              match--;
-            }
-          }
-        }
-      }
-      return node;
-    };
-    return [hydrate, hydrateNode];
-  }
   var supported;
   var perf;
   function startMeasure(instance, type) {
@@ -4803,8 +4396,8 @@ For more details, see https://link.vuejs.org/feature-flags.`
     }
   }
   var queuePostRenderEffect = queueEffectWithSuspense;
-  function createHydrationRenderer(options) {
-    return baseCreateRenderer(options, createHydrationFunctions);
+  function createRenderer(options) {
+    return baseCreateRenderer(options);
   }
   function baseCreateRenderer(options, createHydrationFns) {
     {
@@ -6172,7 +5765,7 @@ For more details, see https://link.vuejs.org/feature-flags.`
       }
       return hostNextSibling(vnode.anchor || vnode.el);
     };
-    const render2 = (vnode, container, isSVG) => {
+    const render = (vnode, container, isSVG) => {
       if (vnode == null) {
         if (container._vnode) {
           unmount(container._vnode, null, null, true);
@@ -6204,9 +5797,9 @@ For more details, see https://link.vuejs.org/feature-flags.`
       );
     }
     return {
-      render: render2,
+      render,
       hydrate,
-      createApp: createAppAPI(render2, hydrate)
+      createApp: createAppAPI(render, hydrate)
     };
   }
   function toggleRecurse({ effect: effect2, update }, allowed) {
@@ -6283,38 +5876,9 @@ For more details, see https://link.vuejs.org/feature-flags.`
   var Static = Symbol.for("v-stc");
   var blockStack = [];
   var currentBlock = null;
-  function openBlock(disableTracking = false) {
-    blockStack.push(currentBlock = disableTracking ? null : []);
-  }
-  function closeBlock() {
-    blockStack.pop();
-    currentBlock = blockStack[blockStack.length - 1] || null;
-  }
   var isBlockTreeEnabled = 1;
   function setBlockTracking(value) {
     isBlockTreeEnabled += value;
-  }
-  function setupBlock(vnode) {
-    vnode.dynamicChildren = isBlockTreeEnabled > 0 ? currentBlock || EMPTY_ARR : null;
-    closeBlock();
-    if (isBlockTreeEnabled > 0 && currentBlock) {
-      currentBlock.push(vnode);
-    }
-    return vnode;
-  }
-  function createElementBlock(type, props, children, patchFlag, dynamicProps, shapeFlag) {
-    return setupBlock(
-      createBaseVNode(
-        type,
-        props,
-        children,
-        patchFlag,
-        dynamicProps,
-        shapeFlag,
-        true
-        /* isBlock */
-      )
-    );
   }
   function isVNode(value) {
     return value ? value.__v_isVNode === true : false;
@@ -7984,14 +7548,11 @@ Component that was made reactive: `,
   }
   var rendererOptions = /* @__PURE__ */ extend({ patchProp }, nodeOps);
   var renderer;
-  var enabledHydration = false;
-  function ensureHydrationRenderer() {
-    renderer = enabledHydration ? renderer : createHydrationRenderer(rendererOptions);
-    enabledHydration = true;
-    return renderer;
+  function ensureRenderer() {
+    return renderer || (renderer = createRenderer(rendererOptions));
   }
-  var createSSRApp = (...args) => {
-    const app = ensureHydrationRenderer().createApp(...args);
+  var createApp = (...args) => {
+    const app = ensureRenderer().createApp(...args);
     if (true) {
       injectNativeTagCheck(app);
       injectCompilerOptionsCheck(app);
@@ -7999,9 +7560,19 @@ Component that was made reactive: `,
     const { mount } = app;
     app.mount = (containerOrSelector) => {
       const container = normalizeContainer(containerOrSelector);
-      if (container) {
-        return mount(container, true, container instanceof SVGElement);
+      if (!container)
+        return;
+      const component = app._component;
+      if (!isFunction(component) && !component.render && !component.template) {
+        component.template = container.innerHTML;
       }
+      container.innerHTML = "";
+      const proxy = mount(container, false, container instanceof SVGElement);
+      if (container instanceof Element) {
+        container.removeAttribute("v-cloak");
+        container.setAttribute("data-v-app", "");
+      }
+      return proxy;
     };
     return app;
   };
@@ -8068,32 +7639,10 @@ Component that was made reactive: `,
     initDev();
   }
 
-  // vue-script:/Users/suryaherdiyanto/Documents/express-mvc/pages/Index.vue?type=script
-  var Index_default = {};
-
-  // vue-template:/Users/suryaherdiyanto/Documents/express-mvc/pages/Index.vue?type=template
-  var _withScopeId = (n) => (pushScopeId("data-v-6a1cb3c6"), n = n(), popScopeId(), n);
-  var _hoisted_1 = /* @__PURE__ */ _withScopeId(() => /* @__PURE__ */ createBaseVNode(
-    "h1",
-    null,
-    "Hello world 2",
-    -1
-    /* HOISTED */
-  ));
-  var _hoisted_2 = [
-    _hoisted_1
-  ];
-  function render(_ctx, _cache) {
-    return openBlock(), createElementBlock("div", null, _hoisted_2);
-  }
-
-  // pages/Index.vue
-  Index_default.render = render;
-
   // assets/js/vue/Index.js
-  createSSRApp({
+  createApp({
     setup() {
     }
-  }).mount("#app");
+  }).mount("#somesection");
 })();
 //# sourceMappingURL=Index.js.map

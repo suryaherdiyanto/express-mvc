@@ -1,8 +1,7 @@
-import { createSSRApp } from 'vue';
-import Index from '../../../pages/Index.vue';
+import { createApp } from 'vue';
 
-createSSRApp({
+createApp({
     setup() {
 
     }
-}).mount('#app');
+}).mount('#somesection');
