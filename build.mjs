@@ -2,23 +2,25 @@ import * as esbuild from "esbuild";
 import fs from 'fs';
 const version = Date.now();
 
-const cacheBusterPlugin = {
-  name: 'cacheBusterPlugin',
-  setup(build) {
-    build.onStart(() => {
-      console.log(`Adding cache buster ${version}`);
-      const index = fs.readFileSync('./views/index.pug', {encoding: 'utf-8'});
-      const newContent = index.replaceAll('%%VERSION%%', version);
+let assetPath = 'assets/js/client.js';
 
-      fs.writeFileSync('./views/index.pug', newContent);
-    })
-  },
-};
+if (process.env.NODE_ENV === 'production') {
+  assetPath = `assets/js/client.${version}.js`;
+}
 
-await esbuild.build({
-    entryPoints: ["./assets/js/client.ts"],
-    outfile: `./public/assets/js/client.${version}.js`,
+const build = await esbuild.context({
+    entryPoints: ["./assets/js/client.js"],
+    outfile: `./public/${assetPath}`,
     bundle: true,
-    minify: true,
-    plugins: [cacheBusterPlugin]
+    minify: process.env.NODE_ENV === 'production' ? true:false,
+    sourcemap: process.env.NODE_ENV !== 'production' ? true:false,
 });
+
+if (process.env.NODE_ENV !== 'production') {
+  build.watch();
+  console.log('Build watch!');
+}
+
+fs.writeFileSync('./public/build-manifest.json', JSON.stringify({
+  "/assets/js/client.js": assetPath
+}));
