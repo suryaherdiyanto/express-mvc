@@ -13,14 +13,6 @@ interface AppOptions {
     sessionStorage?: session.Store
 }
 
-declare global {
-    namespace Express {
-        export interface Request {
-            useService<T>(t: string): T
-        }
-    }
-}
-
 export class App {
     private app: express.Application;
     public services: any = {};
