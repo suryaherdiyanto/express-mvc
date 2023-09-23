@@ -29,5 +29,5 @@ if (process.env.NODE_ENV !== 'production') {
 
 
 fs.writeFileSync('./public/build-manifest.json', JSON.stringify({
-  "/assets/js/client.js": assetPath
+  "/assets/js/client.js": '/'+assetPath
 }));
