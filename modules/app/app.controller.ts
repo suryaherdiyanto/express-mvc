@@ -9,6 +9,6 @@ export class AppController {
     home(_: Request, res: Response) {
         const name = this.service.getName();
 
-        res.render('index', { name });
+        res.renderVue('Index');
     }
 }

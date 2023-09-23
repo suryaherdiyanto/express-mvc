@@ -2,6 +2,7 @@ import express, { IRouterHandler, NextFunction, Request, Response } from "expres
 import Express from "express";
 import session, {SessionOptions} from "express-session";
 import { assignCsrf, verifyCsrf } from "./middlewares/csrf.middleware";
+import { useVue } from "./middlewares/vue.middleware";
 
 interface AppOptions {
     statefull?: boolean | undefined,
@@ -71,6 +72,8 @@ export class App {
     }
 
     setUp() {
+
+        this.app.use(useVue);
 
         if (!this.config.statefull) {
             this.setSessionCookie();

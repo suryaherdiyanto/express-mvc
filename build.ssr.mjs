@@ -6,6 +6,7 @@ const build = await esbuild.context({
     outfile: "./public/assets/js/server.ssr.js",
     minify: true,
     bundle: true,
+    platform: "node",
     plugins: [vuePlugin()]
 });
 
