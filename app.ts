@@ -88,6 +88,12 @@ export class App {
             if (this.config.staticUri && this.config.staticPath) {
                 this.setStatic(this.config.staticUri, this.config.staticPath);
             }
+
+            if (process.env.NODE_ENV !== 'producton') {
+                this.app.use('/src', express.static('./src'));
+            }
+
+            this.app.use('/', express.static('./public'));
         }
 
     }

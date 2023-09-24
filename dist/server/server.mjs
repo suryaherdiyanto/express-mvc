@@ -1,4 +1,4 @@
-import { useSSRContext, mergeProps } from "vue";
+import { useSSRContext, mergeProps, onMounted } from "vue";
 import { ssrRenderAttrs, ssrRenderComponent } from "vue/server-renderer";
 const _export_sfc = (sfc, props) => {
   const target = sfc.__vccOpts || sfc;
@@ -22,10 +22,13 @@ const _sfc_main = {
   __name: "Index",
   __ssrInlineRender: true,
   setup(__props) {
+    onMounted(() => {
+      console.log("Mounted");
+    });
     return (_ctx, _push, _parent, _attrs) => {
       _push(`<div${ssrRenderAttrs(mergeProps({ class: "h-screen" }, _attrs))}>`);
       _push(ssrRenderComponent(TheHeader, null, null, _parent));
-      _push(`<div class="container mx-auto flex flex-col justify-center h-3/4"><h1 class="text-2xl font-semibold text-center">Hello World</h1></div></div>`);
+      _push(`<div class="container mx-auto flex flex-col justify-center h-3/4"><h1 class="text-2xl font-semibold text-center">Hello 2</h1></div></div>`);
     };
   }
 };

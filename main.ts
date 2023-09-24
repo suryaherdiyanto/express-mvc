@@ -17,13 +17,18 @@ export const app = new App({
 	staticPath: './dist/client'
 }).getApp();
 
-function createViteServer() {
-	app.use(appRoute);
+async function createViteServer() {
+	const { createServer } = await import("vite");
+	const server = await createServer({ server: { middlewareMode: true }, appType: 'custom'});
+	app.use(server.middlewares);
 
+	return app;
+}
+
+createViteServer().then(() => {
+	app.use(appRoute);
 	app.use(handle404);
 	app.use(handle500);
 
 	app.listen(3000, () => console.log('App started at port 3000'));
-}
-
-createViteServer();
+});

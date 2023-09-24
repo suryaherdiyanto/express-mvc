@@ -1,7 +1,4 @@
+import { createApp } from "../../node_modules/vue";
+import IndexVue from "../../pages/Index.vue";
 
-console.log('From Client JS');
-
-const body = document.querySelector('body');
-
-console.log(body);
-console.log('woooo');
+createApp(IndexVue).mount('#app');
