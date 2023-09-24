@@ -1,5 +1,5 @@
 node_modules
 sessions
 .env
-dist
+dist/client
 public/assets/js/client.*.js

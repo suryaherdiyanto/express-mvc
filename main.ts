@@ -13,7 +13,8 @@ const fileStorage = FileStore(session);
 
 export const app = new App({
 	sessionStorage: new fileStorage(),
-	statefull: true
+	statefull: true,
+	staticPath: './dist/client'
 }).getApp();
 
 function createViteServer() {
