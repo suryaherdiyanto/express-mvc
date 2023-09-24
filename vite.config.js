@@ -9,6 +9,17 @@ export default defineConfig({
         rollupOptions: {
             input: {
                 client: './src/js/client.js'
+            },
+            output: {
+                entryFileNames: 'js/[name]-[hash].js'
+            }
+        },
+    },
+    server: {
+        proxy: {
+            '/': {
+                target: 'http://localhost:3000',
+                changeOrigin: true
             }
         }
     }

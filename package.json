@@ -4,12 +4,14 @@
   "description": "A boilerplate express for MVC web application",
   "main": "index.js",
   "scripts": {
-    "dev": "concurrently \"nodemon\" \"npx tailwindcss -i ./assets/css/main.css -o ./public/assets/css/main.css --watch\" \"node build.mjs\" \"node build.ssr.mjs\"",
+    "dev": "concurrently \"nodemon\" \"npm run tailwind --watch\" \"npx vite\" \"npm run build:ssr --watch\" \"npm run build:client --watch\"",
     "build": "NODE_ENV=production concurrently \"npx tailwindcss -i ./assets/css/main.css -o ./public/assets/css/main.css --minify\" \"node ./build.mjs\"",
-    "tailwind": "npx tailwindcss -i ./assets/css/main.css -o ./public/assets/css/main.css",
+    "tailwind": "npx tailwindcss -i ./src/css/main.css -o ./dist/client/css/main.css",
     "test": "jest --config=./test/unit/jest.config.js",
     "test:watch": "jest --config=./test/unit/jest.config.js --no-cache --watch",
-    "test:integration": "jest --config=./test/integration/jest.int.config.js --no-cache"
+    "test:integration": "jest --config=./test/integration/jest.int.config.js --no-cache",
+    "build:ssr": "npx vite build --config=vite.ssr.config.js",
+    "build:client": "npx vite build"
   },
   "repository": {
     "type": "git",

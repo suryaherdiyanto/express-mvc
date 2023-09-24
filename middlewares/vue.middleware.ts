@@ -30,7 +30,7 @@ export const useVue = (_: Request, res: Response, next: NextFunction) => {
         renderStream.on('end', () => {
             res.end(`
                 </div>
-                <script src="/assets/js/vue/Index.js"></script>
+                <script src="/assets/js/client.js"></script>
                 </body>
                 </html>
             `)
