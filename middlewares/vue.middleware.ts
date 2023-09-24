@@ -2,13 +2,13 @@ import { NextFunction, Request, Response } from "express";
 import { createSSRApp } from "vue";
 import { renderToNodeStream } from "vue/server-renderer";
 
-const pages = require('../public/assets/js/server').default;
-
 
 export const useVue = (_: Request, res: Response, next: NextFunction) => {
     res.renderVue = async (component: string, data = {}) => {
+        const modules = await import('../dist/server/server.mjs');
+        const pages = modules.default;
 
-        const ssr = createSSRApp(pages[component]);
+        const ssr = createSSRApp((pages as any)[component]);
         const renderStream = renderToNodeStream(ssr, data);
 
         res.type('html');

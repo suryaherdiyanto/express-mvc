@@ -16,9 +16,13 @@ export const app = new App({
 	statefull: true
 }).getApp();
 
-app.use(appRoute);
+function createViteServer() {
+	app.use(appRoute);
 
-app.use(handle404);
-app.use(handle500);
+	app.use(handle404);
+	app.use(handle500);
 
-app.listen(3000, () => console.log('App started at port 3000'));
+	app.listen(3000, () => console.log('App started at port 3000'));
+}
+
+createViteServer();
