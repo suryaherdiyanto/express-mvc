@@ -11,4 +11,8 @@ export class AppController {
 
         res.renderInertia('Index');
     }
+
+    about(_: Request, res: Response) {
+        res.renderInertia('About');
+    }
 }

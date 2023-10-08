@@ -13,13 +13,13 @@ export const useInertia = (req: Request, res: Response, next: NextFunction) => {
     res.renderInertia = (component: string, props: {}) => {
         const page: InertiaPage = {
             component,
-            props,
+            props: { ...props },
             url: req.path,
             version: process.env.APP_VERSION as string,
         }
 
         if (req.headers['X-Inertia'] || req.headers['x-inertia']) {
-            return res.type('application/json').json(page);
+            return res.setHeader("X-Inertia", "true").json(page);
         }
 
         res.type('html').render('index', { props: JSON.stringify(page) });

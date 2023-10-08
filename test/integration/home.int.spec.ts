@@ -31,4 +31,10 @@ describe('Home Page', () => {
 
         expect(response.body.component).toEqual('Index');
     });
+
+    it('Should props defined', async () => {
+        const response = await request(app).get('/').set("X-Inertia", "1");
+
+        expect(response.body.props).toBeDefined();
+    });
 })
