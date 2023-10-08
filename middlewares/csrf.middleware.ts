@@ -1,8 +1,6 @@
 import {createHash} from "crypto";
 import {NextFunction, Request, Response} from "express";
-import * as dotenv from 'dotenv';
 
-dotenv.config();
 const csrfToken = createHash('sha256').update(process.env.APP_KEY as string + Date.now()).digest('hex');
 
 export function assignCsrf(req: Request, _: Response, next: NextFunction) {

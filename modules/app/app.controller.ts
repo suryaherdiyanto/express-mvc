@@ -13,6 +13,6 @@ export class AppController {
     }
 
     about(_: Request, res: Response) {
-        res.renderInertia('About');
+        res.renderInertia('About', { name: "surya" });
     }
 }

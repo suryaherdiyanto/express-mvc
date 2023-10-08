@@ -1,4 +1,4 @@
-import express, { IRouterHandler, NextFunction, Request, Response } from "express";
+import express from "express";
 import Express from "express";
 import session, {SessionOptions} from "express-session";
 import { assignCsrf, verifyCsrf } from "./middlewares/csrf.middleware";
@@ -72,7 +72,7 @@ export class App {
     }
 
     setUp() {
-        if (!this.config.statefull) {
+        if (this.config.statefull) {
             this.setSessionCookie();
             this.setStateFull();
         }

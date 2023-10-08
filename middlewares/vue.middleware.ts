@@ -11,9 +11,15 @@ interface InertiaPage {
 export const useInertia = (req: Request, res: Response, next: NextFunction) => {
 
     res.renderInertia = (component: string, props: {}) => {
+
         const page: InertiaPage = {
             component,
-            props: { ...props },
+            props: {
+                ...props,
+                share: {
+                    _token: req.session._csrf
+                }
+            },
             url: req.path,
             version: process.env.APP_VERSION as string,
         }
