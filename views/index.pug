@@ -6,12 +6,9 @@ html
 	link(href='https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&display=swap' rel='stylesheet')
 
 	body(class="bg-gray-200 w-full font-body")
-		div(class="container mx-auto py-5 h-screen table")
-			h1(class="text-center font-bold text-5xl table-cell my-auto align-middle") Hello World
-
-
-		if process.env.NODE_ENV === 'production'
-			script(src="/assets/js/client.1694946987720.js")
-		else
-			script(src="/assets/js/client.js")
+		div(id="app" data-page=props)
+	if process.env.NODE_ENV === 'production'
+		script(src="/assets/js/client.1694946987720.js")
+	else
+		script(src="/src/js/client" type="module")
 
