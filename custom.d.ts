@@ -14,7 +14,7 @@ declare global {
         }
 
         export interface Response {
-            renderVue(page: string, data?: object): void
+            renderInertia(component: string, props?: object): any
         }
     }
 }
