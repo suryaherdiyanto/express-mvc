@@ -4,7 +4,7 @@
   "description": "A boilerplate express for MVC web application",
   "main": "index.js",
   "scripts": {
-    "dev": "concurrently \"nodemon\" \"npm run tailwind --watch\" \"npm run build:ssr -- --watch\"",
+    "dev": "concurrently \"nodemon\" \"npm run tailwind --watch\"",
     "build": "NODE_ENV=production concurrently \"npx tailwindcss -i ./assets/css/main.css -o ./public/assets/css/main.css --minify\" \"node ./build.mjs\"",
     "tailwind": "npx tailwindcss -i ./src/css/main.css -o ./dist/client/css/main.css",
     "test": "jest --config=./test/unit/jest.config.js",
@@ -28,6 +28,7 @@
   },
   "homepage": "https://github.com/suryaherdiyanto/express-mvc#readme",
   "dependencies": {
+    "@inertiajs/vue3": "^1.0.11",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "express-session": "^1.17.3",
