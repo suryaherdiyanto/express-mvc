@@ -11,7 +11,7 @@ let controller: AppController;
 beforeEach(() => {
     response = {
         render: jest.fn(),
-        renderVue: jest.fn()
+        renderInertia: jest.fn()
     };
 
     request = {};
@@ -25,9 +25,9 @@ describe("Home Controller", () => {
 
     it("Should return home view", () => {
 
-        const res = jest.spyOn(response, 'renderVue');
+        const res = jest.spyOn(response, 'renderInertia');
 
         controller.home(request as Request, response as Response);
-        expect(res).toHaveBeenCalledWith('Index');
+        expect(res).toHaveBeenCalledWith('Index', { events: [], users: []});
     });
 })
