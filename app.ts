@@ -2,7 +2,7 @@ import express from "express";
 import Express from "express";
 import session, {SessionOptions} from "express-session";
 import { assignCsrf, verifyCsrf } from "./middlewares/csrf.middleware";
-import { useInertia } from "./middlewares/vue.middleware";
+import { useInertia } from "./middlewares/inertia.middleware";
 
 interface AppOptions {
     statefull?: boolean | undefined,
