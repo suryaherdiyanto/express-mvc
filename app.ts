@@ -16,7 +16,6 @@ interface AppOptions {
 
 export class App {
     private app: express.Application;
-    public services: any = {};
 
     private config: AppOptions = {
         statefull: false,
@@ -60,11 +59,6 @@ export class App {
         this.app.use(/^\/(?!api).*/, Express.urlencoded({ extended: false }));
         this.app.use(/^\/(?!api).*/, assignCsrf);
         this.app.use(/^\/(?!api).*/, verifyCsrf);
-    }
-
-    registerService<T>(name: string, service: T) {
-        this.services[name] = service;
-        return this;
     }
 
     getApp() {
