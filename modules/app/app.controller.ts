@@ -9,7 +9,7 @@ export class AppController {
     home(_: Request, res: Response) {
         const name = this.service.getName();
 
-        res.renderInertia('Index');
+        res.renderInertia('Index', { users: [], events: []});
     }
 
     about(_: Request, res: Response) {

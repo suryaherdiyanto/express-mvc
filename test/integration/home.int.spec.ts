@@ -39,4 +39,11 @@ describe('Home Page', () => {
 
         expect(response.body.props).toBeDefined();
     });
+
+	it('Should can partialy return data for partial reloads', async () => {
+		const response = await request(app).get('/').set('X-Inertia', '1').set('X-Inertia-Partial-Component', "Index").set('X-Inertia-Partial-Data', "events");
+
+		expect(response.body.props.events).toBeDefined();
+		expect(response.body.props.users).not.toBeDefined();
+	})
 })
