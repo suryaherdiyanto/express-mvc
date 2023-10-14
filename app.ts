@@ -1,8 +1,8 @@
-import express, { IRouterHandler, NextFunction, Request, Response } from "express";
+import express from "express";
 import Express from "express";
 import session, {SessionOptions} from "express-session";
 import { assignCsrf, verifyCsrf } from "./middlewares/csrf.middleware";
-import { useVue } from "./middlewares/vue.middleware";
+import { useInertia } from "./middlewares/inertia.middleware";
 
 interface AppOptions {
     statefull?: boolean | undefined,
@@ -16,7 +16,6 @@ interface AppOptions {
 
 export class App {
     private app: express.Application;
-    public services: any = {};
 
     private config: AppOptions = {
         statefull: false,
@@ -62,20 +61,12 @@ export class App {
         this.app.use(/^\/(?!api).*/, verifyCsrf);
     }
 
-    registerService<T>(name: string, service: T) {
-        this.services[name] = service;
-        return this;
-    }
-
     getApp() {
         return this.app;
     }
 
     setUp() {
-
-        this.app.use(useVue);
-
-        if (!this.config.statefull) {
+        if (this.config.statefull) {
             this.setSessionCookie();
             this.setStateFull();
         }
@@ -96,5 +87,6 @@ export class App {
             this.app.use('/', express.static('./public'));
         }
 
+        this.app.use(useInertia);
     }
 }

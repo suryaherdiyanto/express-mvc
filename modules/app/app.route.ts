@@ -6,4 +6,5 @@ const appController = container.resolve(AppController);
 export const appRoute = express.Router();
 
 appRoute.get('/', appController.home.bind(appController));
+appRoute.get('/about', appController.about.bind(appController));
 

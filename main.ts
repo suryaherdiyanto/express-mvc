@@ -8,7 +8,6 @@ import session from "express-session";
 import FileStore from "session-file-store";
 import { App } from "./app";
 import { appRoute } from "./modules/app/app.route";
-import { Application } from "express";
 
 const fileStorage = FileStore(session);
 
@@ -27,14 +26,12 @@ async function createViteServer() {
 	return app;
 }
 
-const initApp = (app: Application) => {
-	app.use(appRoute);
-	app.use(handle404);
-	app.use(handle500);
-
-	app.listen(3000, () => console.log('App started at port 3000'));
-}
-
 if (process.env.NODE_ENV !== 'production') {
-	createViteServer().then(initApp);
+	createViteServer().then((app) => {
+		app.use(appRoute);
+		app.use(handle404);
+		app.use(handle500);
+
+		app.listen(3000, () => console.log('App started at port 3000'));
+	});
 }

@@ -9,12 +9,8 @@ declare module 'express-session' {
 
 declare global {
     namespace Express {
-        export interface Request {
-            useService<T>(t: string): T
-        }
-
         export interface Response {
-            renderVue(page: string, data?: object): void
+            renderInertia(component: string, props?: ComponentProps): any
         }
     }
 }
